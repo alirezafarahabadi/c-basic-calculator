@@ -1,13 +1,19 @@
 #include <iostream>
-#include "ArrayList.h"
-#include <vector>
-#include <tuple>
 #include <algorithm>
 #include <cmath>
 
-using namespace std;
 
-string data = "";                      // input
+using std::vector;
+using std::tuple;
+using std::cin;
+using std::cout;
+using std::string;
+using std::to_string;
+using std::get;
+using std::sort;
+
+
+string my_input = "";                      // input
 string number = "";                    // tmp
 bool before_is_number = false;         //tmp
 bool not_op = false;                   //tmp
@@ -267,6 +273,7 @@ float final_result() // calculate result
                 return stof(array_main[j]);
         }
     }
+    return 0.0;
 }
 
 float calculate() // main function of calculation
@@ -293,15 +300,15 @@ void show_message(string location) // return error messages
     printf("Please again!\n");
 }
 
-void parser() // parser for input data
+void parser() // parser for input my_input
 {
-    for (int i = 0; i < data.length(); i++)
+    for (int i = 0; i < my_input.length(); i++)
     {
-        if (data[i] == ' ')
+        if (my_input[i] == ' ')
             continue;
-        if (is_number(string(1, data[i])))
+        if (is_number(string(1, my_input[i])))
         {
-            number += data[i];
+            number += my_input[i];
             before_is_number = true;
         }
         else if (before_is_number == true)
@@ -327,7 +334,7 @@ void parser() // parser for input data
                 return;
             }
         }
-        else if (data[i] == '+' || data[i] == '-')
+        else if (my_input[i] == '+' || my_input[i] == '-')
         { // + or - detected
             if (array_index == 0)
             {
@@ -336,7 +343,7 @@ void parser() // parser for input data
             }
             if (is_number(array_main[array_index - 1]) || array_main[array_index - 1] == ")")
             {
-                array_main[array_index] = string(1, data[i]);
+                array_main[array_index] = string(1, my_input[i]);
                 array_index++;
             }
             else
@@ -346,7 +353,7 @@ void parser() // parser for input data
             }
         }
 
-        else if (data[i] == '*' || data[i] == '/')
+        else if (my_input[i] == '*' || my_input[i] == '/')
         { // "*" or "/" detected
             if (array_index == 0)
             {
@@ -355,7 +362,7 @@ void parser() // parser for input data
             }
             if (is_number(array_main[array_index - 1]) || array_main[array_index - 1] == ")")
             {
-                array_main[array_index] = string(1, data[i]);
+                array_main[array_index] = string(1, my_input[i]);
                 array_index++;
             }
             else
@@ -364,7 +371,7 @@ void parser() // parser for input data
                 return;
             }
         }
-        else if (data[i] == '^')
+        else if (my_input[i] == '^')
         { // "^"" detected
             if (array_index == 0)
             {
@@ -373,7 +380,7 @@ void parser() // parser for input data
             }
             if (is_number(array_main[array_index - 1]) || array_main[array_index - 1] == ")")
             {
-                array_main[array_index] = string(1, data[i]);
+                array_main[array_index] = string(1, my_input[i]);
                 array_index++;
             }
             else
@@ -383,18 +390,18 @@ void parser() // parser for input data
             }
         }
 
-        else if (data[i] == '(')
+        else if (my_input[i] == '(')
         { // "(" detected
             par_order++;
             if (array_index == 0)
             {
-                array_main[array_index] = string(1, data[i]);
+                array_main[array_index] = string(1, my_input[i]);
                 par_locations.emplace_back(par_order, array_index);
                 array_index++;
             }
             else if (array_main[array_index - 1] == "+" || array_main[array_index - 1] == "-" || array_main[array_index - 1] == "*" || array_main[array_index - 1] == "/" || array_main[array_index - 1] == "^" || array_main[array_index - 1] == "(")
             {
-                array_main[array_index] = string(1, data[i]);
+                array_main[array_index] = string(1, my_input[i]);
                 par_locations.emplace_back(par_order, array_index);
                 array_index++;
             }
@@ -405,12 +412,12 @@ void parser() // parser for input data
             }
         }
 
-        else if (data[i] == ')')
+        else if (my_input[i] == ')')
         { // ")" detected
             par_order--;
             if (is_number(array_main[array_index - 1]) || array_main[array_index - 1] == ")")
             {
-                array_main[array_index] = string(1, data[i]);
+                array_main[array_index] = string(1, my_input[i]);
                 array_index++;
             }
             else
@@ -420,15 +427,15 @@ void parser() // parser for input data
             }
         }
 
-        else if (data[i] == '=')
+        else if (my_input[i] == '=')
         { // "=" detected
             if (is_number(array_main[array_index - 1]) || array_main[array_index - 1] == ")")
             {
-                array_main[array_index] = string(1, data[i]);
+                array_main[array_index] = string(1, my_input[i]);
                 sort(par_locations.begin(), par_locations.end());
                 float res = calculate();
-                cout << endl
-                     << "Result is: " << res << endl << endl;
+		        cout << "\n"
+                     << "Result is: " << res << "\n\n";
                 return;
             }
             else
@@ -448,19 +455,19 @@ void parser() // parser for input data
 
 int main() // main
 {
-    cout << "Basic calculator\nIt supports four main operators and power(^) and parentheses. Please write english and end of equation write '='\n";
+    cout << "Basic calculator\nIt supports four main operators and power(^) and parentheses. Please use english characters and end of equation write '='\n";
     int order=0;
     
     while (true)
     { // get input
-        cout << "1.start 2.exit\n";
-        cin >> order;
+	cout << "1.start 2.exit\n";
+	cin >> order;
         if (order == 1)
         {
         cout << "Equation: ";
-        cin.ignore();
-        getline(cin, data);
-        cout << data<< endl;
+	    cin.ignore();
+        getline(cin, my_input);
+	    cout << my_input<< "\n";
         before_is_number = false;
         array_index = 0;
         not_op = false;
@@ -472,7 +479,7 @@ int main() // main
             break;
         else
         {
-            cout << "Wrong order. Please again\n";
+	    cout << "Wrong order. Please again\n";
             continue;
         }
     }
